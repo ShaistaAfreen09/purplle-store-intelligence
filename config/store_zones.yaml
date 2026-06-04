@@ -1,0 +1,43 @@
+# Zone definitions per camera. Polygons are lists of [x, y] pixel coordinates (clockwise or counter-clockwise).
+# Cameras: CAM1=skincare, CAM2=cosmetics, CAM3=entrance, CAM4=staff, CAM5=checkout
+
+CAM1:
+  - name: SKINCARE
+    type: SKINCARE
+    polygon:
+      - [0, 0]
+      - [1280, 0]
+      - [1280, 720]
+      - [0, 720]
+CAM2:
+  - name: COSMETICS
+    type: COSMETICS
+    polygon:
+      - [0, 0]
+      - [1280, 0]
+      - [1280, 720]
+      - [0, 720]
+CAM3:
+  - name: ENTRANCE
+    type: ENTRANCE
+    polygon:
+      - [0, 0]
+      - [1280, 0]
+      - [1280, 400]
+      - [0, 400]
+CAM4:
+  - name: STAFF_ONLY
+    type: STAFF_ONLY
+    polygon:
+      - [0, 0]
+      - [1280, 0]
+      - [1280, 720]
+      - [0, 720]
+CAM5:
+  - name: CHECKOUT
+    type: CHECKOUT
+    polygon:
+      - [0, 360]
+      - [1280, 360]
+      - [1280, 720]
+      - [0, 720]

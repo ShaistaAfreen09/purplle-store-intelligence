@@ -1,0 +1,53 @@
+services:
+  postgres:
+    image: postgres:15-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-postgres}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-postgres}
+      POSTGRES_DB: ${POSTGRES_DB:-store_intelligence}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-postgres} -d ${POSTGRES_DB:-store_intelligence}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  backend:
+    build:
+      context: ..
+      dockerfile: Dockerfile.backend
+    restart: unless-stopped
+    depends_on:
+      - postgres
+    environment:
+      DATABASE_URL: ${DATABASE_URL:-postgresql://postgres:postgres@postgres:5432/store_intelligence}
+      PYTHONUNBUFFERED: "1"
+      PYTHONDONTWRITEBYTECODE: "1"
+    ports:
+      - "8000:8000"
+    healthcheck:
+      test: ["CMD-SHELL", "python -c \"import urllib.request; urllib.request.urlopen('http://localhost:8000/health').read()\""]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  dashboard:
+    build:
+      context: ..
+      dockerfile: Dockerfile.dashboard
+      args:
+        VITE_API_BASE: ${VITE_API_BASE:-http://localhost:8000}
+    restart: unless-stopped
+    depends_on:
+      - backend
+    environment:
+      VITE_API_BASE: ${VITE_API_BASE:-http://localhost:8000}
+    ports:
+      - "4173:80"
+
+volumes:
+  postgres_data:
