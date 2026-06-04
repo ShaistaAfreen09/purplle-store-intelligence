@@ -1,1 +1,0 @@
-"""Dashboard integration service placeholder."""
